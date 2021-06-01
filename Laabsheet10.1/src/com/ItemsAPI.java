@@ -1,7 +1,6 @@
 package com;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,8 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.java_cup.internal.runtime.Scanner;
-import com.sun.javafx.collections.MappingChange.Map;
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Servlet implementation class ItemsAPI
@@ -41,10 +43,10 @@ Item i = new Item();
 	//convert request parameters to a map
 	private static Map getParasMap(HttpServletRequest request) {
 		
-		Map<String , String> map = new HashMap<String,String>();
+		Map<String, String> map = new HashMap<String,String>();
 		try
 		{
-			//String param = "";
+			
 			Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
 			String queryString = scanner.hasNext() ?
 			scanner.useDelimiter("\\A").next() : "";
@@ -68,11 +70,10 @@ Item i = new Item();
 		
 		Map paras = getParasMap(request);
 		
-		String output = funds.updateProj(paras.get("hidItemIDSave").toString(),
-				paras.get("email").toString(),
+		String output = i.updateItem(paras.get("hidItemIDSave").toString(),
+				paras.get("code").toString(),
 				paras.get("name").toString(),
-				paras.get("address").toString(),
-				paras.get("phone").toString(),
+				paras.get("price").toString(),
 				paras.get("des").toString());
 		
 		response.getWriter().write(output);
@@ -84,7 +85,7 @@ Item i = new Item();
 		
 		Map paras = getParasMap(request);
 		
-		String output = funds.deleteProj(paras.get("fundID").toString());
+		String output = i.deleteItem(paras.get("id").toString());
 		
 		response.getWriter().write(output);
 	}

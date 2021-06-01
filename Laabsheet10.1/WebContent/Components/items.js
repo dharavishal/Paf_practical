@@ -28,7 +28,21 @@ $(document).on("click", "#btnSave", function(event)
 	return;
 	}
 	// If valid------------------------
-	$("#formItem").submit();
+	var type = ($("#hidItemIDSave").val() == "") ? "POST" : "PUT";
+	console.log(type);
+	console.log($("#formInsert").serialize());
+	$.ajax(
+	{
+		url : "ItemsAPI",
+		type : type,
+		data : $("#formInsert").serialize(),
+		dataType : "text",
+		complete : function(response, status)
+		{
+			onItemSaveComplete(response.responseText, status);
+		}
+});
+	
 });
 // UPDATE==========================================
 $(document).on("click", ".btnUpdate", function(event)
@@ -39,6 +53,28 @@ $(document).on("click", ".btnUpdate", function(event)
 	$("#price").val($(this).closest("tr").find('td:eq(2)').text());
 	$("#des").val($(this).closest("tr").find('td:eq(3)').text());
 });
+
+
+
+
+// DELETE===========================================
+	$(document).on("click", ".btnRemove", function(event)
+	{ 
+	 $.ajax( 
+	 { 
+	 url : "ItemssAPI", 
+	 type : "DELETE", 
+	 data : "id=" + $(this).data("id"),
+	 dataType : "text", 
+	 complete : function(response, status) 
+	 { 
+	 onItemDeleteComplete(response.responseText, status); 
+	 } 
+	 }); 
+});
+
+
+
 // CLIENT-MODEL================================================================
 function validateItemForm()
 {
@@ -75,3 +111,60 @@ function validateItemForm()
 	}
 	return true;
 }
+
+function onItemSaveComplete(response, status)
+{ 
+if (status == "success") 
+ { 
+ var resultSet = JSON.parse(response); 
+ if (resultSet.status.trim() == "success") 
+ { 
+ $("#alertSuccess").text("Successfully saved."); 
+ $("#alertSuccess").show();
+ $("#divItemsGrid").html(resultSet.data); 
+ } else if (resultSet.status.trim() == "error") 
+ { 
+ $("#alertError").text(resultSet.data); 
+ $("#alertError").show(); 
+ } 
+ } else if (status == "error") 
+ { 
+ $("#alertError").text("Error while saving."); 
+ $("#alertError").show(); 
+ } else
+ { 
+ $("#alertError").text("Unknown error while saving.."); 
+ $("#alertError").show(); 
+ } 
+ $("#hidItemIDSave").val(""); 
+ $("#formInsert")[0].reset();
+
+
+}
+
+function onItemDeleteComplete(response, status)
+{ 
+if (status == "success") 
+ { 
+ var resultSet = JSON.parse(response); 
+ if (resultSet.status.trim() == "success") 
+ { 
+ $("#alertSuccess").text("Successfully deleted."); 
+ $("#alertSuccess").show();
+ $("#divItemsGrid").html(resultSet.data); 
+ } else if (resultSet.status.trim() == "error") 
+ { 
+ $("#alertError").text(resultSet.data); 
+ $("#alertError").show(); 
+ } 
+ } else if (status == "error") 
+ { 
+ $("#alertError").text("Error while deleting."); 
+ $("#alertError").show(); 
+ } else
+ { 
+ $("#alertError").text("Unknown error while deleting.."); 
+ $("#alertError").show(); 
+} 
+}
+

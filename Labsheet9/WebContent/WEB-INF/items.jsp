@@ -4,53 +4,6 @@
 
 
 
- <%
- 	//Save-------------------------------
- 	if(request.getParameter("code") != null)
- 	{
- 		Item  itemObj = new Item();
- 		String stsMsg = "";
- 		
- 		//Insert-----------------
- 		
- 		if (request.getParameter("hidItemIDSave")  == "")
- 		{
- 			stsMsg = itemObj.insertItem(request.getParameter("code"),
- 		 		request.getParameter("name"),
- 		 		request.getParameter("price"),
- 		 		request.getParameter("des"));
- 		
-     	}
- 	else
- 	 //Update---------------------------------
- 	{
- 		stsMsg = itemObj.updateItem(request.getParameter("hidItemIDSave"),
- 				request.getParameter("code"),
- 				request.getParameter("name"),
- 				request.getParameter("price"),
- 				request.getParameter("des"));
- 		
- 	}
- 		
- 		session.setAttribute("statusMsg", stsMsg);
-}
- 
- 	//Delete----------------------------------
- 	
-	 if(request.getParameter("hidItemIDDelete") != null){
- 		
- 		Item i = new Item();
- 		String stsMsg = i.deleteItem(request.getParameter("hidItemIDDelete"));
- 		session.setAttribute("statusMsg", stsMsg);
- 	}
- 	
- 	
- 	
- 
- 
- %>
-    
-    
     
 <!DOCTYPE html>
 <html>
@@ -58,14 +11,15 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 <link rel="stylesheet" href="Views/bootstrap.min.css">
-<script src="Components/jquery-3.6.0.min.js"></script>
-<script src="Components/Insert.js"></script>
+<script src="Components/jquery-1.9.1.min.js"></script>
+<script src="Components/items.js"></script>
 
 </head>
 <body>
-<h1>Funding Project Management</h1>
+<div class="container"><div class="row"><div class="col-6">
+<h1>Items Management</h1>
 
-<form id="formItem" name="formItem" action="items.jsp" method="post">
+<form id="formItem" name="formItem">
 	
 	Item Code: <input id="code" name="code" type="text" class="form-control form-control-sm"><br><br>
 	Item Name: <input id="name" name="name" type="text" class="form-control form-control-sm"><br><br>
@@ -75,6 +29,9 @@
 	<input type="hidden" id="hidItemIDSave" name="hidItemIDSave" value="">
 	
 </form>
+
+<div id="alertSuccess" class="alert alert-success"></div>
+<div id="alertError" class="alert alert-danger"></div>
 
 <%
 	out.print(session.getAttribute("statusMsg"));
@@ -88,6 +45,6 @@
 	out.print(i.readItems());
 %>
 
-
+</div> </div> </div>
 </body>
 </html>
